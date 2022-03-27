@@ -6,7 +6,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
 import static com.UserOperations.EMAIL_POSTFIX;
-import static com.codeborne.selenide.Configuration.pageLoadTimeout;
 
 public class RegistrationPage {
 
