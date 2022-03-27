@@ -22,10 +22,25 @@ public class AuthorizationPage {
     @FindBy(how = How.XPATH, using = "//div/label[text()='Пароль']/following::input[1]")
     public SelenideElement passwordInput;
 
+    //локатор кнопки Войти
+    @FindBy(how = How.XPATH, using = "//button[text()='Войти']")
+    public SelenideElement loginButton;
+
     //локатор линка Зарегистрироваться
     @FindBy(how = How.XPATH, using = "//a[text()='Зарегистрироваться']")
     public SelenideElement registerLink;
 
+    //локатор линка Восстановить пароль
+    @FindBy(how = How.XPATH, using = "//a[text()='Восстановить пароль']")
+    public SelenideElement recoverPasswordLink;
+
 
     public final String url = "https://stellarburgers.nomoreparties.site/login";
+
+    //Авторизация
+    public void authorization(String email, String password) {
+        emailInput.setValue(email);
+        passwordInput.setValue(password);
+        loginButton.click();
+    }
 }

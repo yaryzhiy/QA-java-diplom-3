@@ -79,8 +79,8 @@ public class UserOperations {
                 .statusCode(202);
     }
 
-    @Step("Авторизация пользователя")
-    public static String authorization(String email, String password) {
+    @Step("Авторизация пользователя на бэке")
+    public static String authorizationBack(String email, String password) {
         Map<String, String> request = new HashMap<>();
         request.put("email", email);
         request.put("password", password);

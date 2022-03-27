@@ -6,7 +6,7 @@ import page.object.AuthorizationPage;
 import page.object.ConstructorPage;
 import page.object.RegistrationPage;
 
-import static com.UserOperations.authorization;
+import static com.UserOperations.authorizationBack;
 import static com.UserOperations.delete;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;
@@ -31,7 +31,7 @@ public class RegistrationTest {
         authorizationPage.registerLink.shouldBe(Condition.visible);
         assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(authorizationPage.url));
 
-        String token = authorization(registrationPage.emailValue, registrationPage.passwordValue);
+        String token = authorizationBack(registrationPage.emailValue, registrationPage.passwordValue);
         delete(token);
     }
 

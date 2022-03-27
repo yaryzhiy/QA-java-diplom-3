@@ -30,6 +30,10 @@ public class RegistrationPage {
     @FindBy(how = How.XPATH, using = "//p[text()='Некорректный пароль']")
     public SelenideElement incorrectPasswordWarning;
 
+    //локатор линка Войти
+    @FindBy(how = How.XPATH, using = "//a[text()='Войти']")
+    public SelenideElement loginLink;
+
 
     public String nameValue;
     public String emailValue;

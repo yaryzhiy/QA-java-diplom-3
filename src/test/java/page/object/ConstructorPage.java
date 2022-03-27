@@ -17,4 +17,7 @@ public class ConstructorPage {
     //локатор кнопки Войти в аккаунт
     @FindBy(how = How.XPATH, using = "//button[text()='Войти в аккаунт']")
     public SelenideElement logInToAccountButton;
+
+
+    public final String url = "https://stellarburgers.nomoreparties.site/";
 }
