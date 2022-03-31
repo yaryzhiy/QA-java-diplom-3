@@ -2,6 +2,8 @@ package com;
 
 import com.model.Tokens;
 import com.model.UserRegisterResponse;
+import io.qameta.allure.Step;
+import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.HashMap;
@@ -74,6 +76,39 @@ public class UserOperations {
                 .when()
                 .delete("auth/user")
                 .then()
+                .statusCode(202);
+    }
+
+    @Step("Авторизация пользователя на бэке")
+    public static String authorizationBack(String email, String password) {
+        Map<String, String> request = new HashMap<>();
+        request.put("email", email);
+        request.put("password", password);
+
+        Response response = given()
+                .spec(Base.getBaseSpec())
+                .and()
+                .log().body()
+                .body(request)
+                .when()
+                .post("auth/login");
+
+        response.then()
+                .statusCode(200);
+
+        return response.then().extract().path("accessToken");
+    }
+
+    @Step("Удаление пользователя")
+    public static void delete(String token) {
+        given()
+                .spec(Base.getBaseSpec())
+                .and()
+                .header("Authorization", token)
+                .when()
+                .delete("auth/user")
+                .then()
+                .log().body()
                 .statusCode(202);
     }
 
