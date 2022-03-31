@@ -16,98 +16,83 @@ import static org.hamcrest.Matchers.equalTo;
 public class LoginTest {
 
     ConstructorPage constructorPage;
-    AuthorizationPage authorizationPage;
+    AuthorizationPage authorizationPage = page(AuthorizationPage.class);
     RegistrationPage registrationPage;
     PersonalAccountPage personalAccountPage = page(PersonalAccountPage.class);
+    RecoverPasswordPage recoverPasswordPage = page(RecoverPasswordPage.class);
     String token;
 
     @Before
     @Step("Регистрация пользователя")
     public void registation() {
         constructorPage = open(BASE_URL, ConstructorPage.class);
-        constructorPage.personalAccountButton.click();
-
-        authorizationPage = page(AuthorizationPage.class);
-        authorizationPage.registerLink.click();
-
+        constructorPage.getPersonalAccountButton().click();
+        authorizationPage.getRegisterLink().click();
         registrationPage = page(RegistrationPage.class);
         registrationPage.registration();
-        authorizationPage.entranceHeader.shouldBe(Condition.visible);
-        authorizationPage.constructorButton.click();
+        authorizationPage.getEntranceHeader().shouldBe(Condition.visible);
+        authorizationPage.getConstructorButton().click();
     }
 
 
     @Test
     @DisplayName("Вход по кнопке «Войти в аккаунт» на главной")
     public void logInToAccountMainSuccessTest() {
-        constructorPage.logInToAccountButton.click();
-
-        authorizationPage.entranceHeader.shouldBe(Condition.visible);
+        constructorPage.getLogInToAccountButton().click();
+        authorizationPage.getEntranceHeader().shouldBe(Condition.visible);
         authorizationPage.authorization(registrationPage.emailValue, registrationPage.passwordValue);
-        constructorPage.assembleBurgerHeader.shouldBe(Condition.visible);
-        assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(constructorPage.url));
 
-        logout();
+        constructorPage.getAssembleBurgerHeader().shouldBe(Condition.visible);
+        assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(constructorPage.url));
     }
 
     @Test
     @DisplayName("Вход через кнопку «Личный кабинет»")
     public void loginViaPersonalAccountButtonSuccessTest() {
-        constructorPage.personalAccountButton.click();
-
-        authorizationPage.entranceHeader.shouldBe(Condition.visible);
+        constructorPage.getPersonalAccountButton().click();
+        authorizationPage.getEntranceHeader().shouldBe(Condition.visible);
         authorizationPage.authorization(registrationPage.emailValue, registrationPage.passwordValue);
-        constructorPage.assembleBurgerHeader.shouldBe(Condition.visible);
-        assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(constructorPage.url));
 
-        logout();
+        constructorPage.getAssembleBurgerHeader().shouldBe(Condition.visible);
+        assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(constructorPage.url));
     }
 
     @Test
     @DisplayName("Вход через кнопку в форме регистрации")
     public void loginViaButtonInRegistrationFormSuccessTest() {
-        constructorPage.personalAccountButton.click();
-        authorizationPage.registerLink.click();
-        registrationPage.loginLink.click();
-
-        authorizationPage.entranceHeader.shouldBe(Condition.visible);
+        constructorPage.getPersonalAccountButton().click();
+        authorizationPage.getRegisterLink().click();
+        registrationPage.getLoginLink().click();
+        authorizationPage.getEntranceHeader().shouldBe(Condition.visible);
         authorizationPage.authorization(registrationPage.emailValue, registrationPage.passwordValue);
-        constructorPage.assembleBurgerHeader.shouldBe(Condition.visible);
-        assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(constructorPage.url));
 
-        logout();
+        constructorPage.getAssembleBurgerHeader().shouldBe(Condition.visible);
+        assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(constructorPage.url));
     }
 
     @Test
     @DisplayName("Вход через кнопку в форме восстановления пароля")
     public void loginViaButtonInPasswordRecoveryFormSuccessTest() {
-        constructorPage.personalAccountButton.click();
-        authorizationPage.recoverPasswordLink.click();
-        RecoverPasswordPage recoverPasswordPage = page(RecoverPasswordPage.class);
-        recoverPasswordPage.loginLink.click();
-
-        authorizationPage.entranceHeader.shouldBe(Condition.visible);
+        constructorPage.getPersonalAccountButton().click();
+        authorizationPage.getRecoverPasswordLink().click();
+        recoverPasswordPage.getLoginLink().click();
+        authorizationPage.getEntranceHeader().shouldBe(Condition.visible);
         authorizationPage.authorization(registrationPage.emailValue, registrationPage.passwordValue);
-        constructorPage.assembleBurgerHeader.shouldBe(Condition.visible);
+
+        constructorPage.getAssembleBurgerHeader().shouldBe(Condition.visible);
         assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(constructorPage.url));
-
-        logout();
     }
 
 
+    @After()
     @Step("Выход из системы")
-    public void logout() {
-        authorizationPage.constructorButton.click();
-        constructorPage.personalAccountButton.click();
-        personalAccountPage.logoutButton.click();
-        authorizationPage.constructorButton.click();
-    }
+    public void tearDown() {
+        authorizationPage.getConstructorButton().click();
+        constructorPage.getPersonalAccountButton().click();
+        personalAccountPage.getLogoutButton().click();
+        authorizationPage.getConstructorButton().click();
 
-    @After
-    public void down() {
         token = authorizationBack(registrationPage.emailValue, registrationPage.passwordValue);
         delete(token);
     }
-
-
 }

@@ -1,5 +1,4 @@
 import com.codeborne.selenide.Condition;
-import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import page.object.ConstructorPage;
@@ -9,19 +8,34 @@ import static configuration.Configuration.BASE_URL;
 
 public class ConstructorTest {
 
+    ConstructorPage constructorPage;
+
     @Test
-    @DisplayName("Конструктор. Переходы по вкладкам")
-    @Description("Раздел «Конструктор». Проверка работы переходов к разделам: «Булки», «Соусы», «Начинки»")
-    public void tabTransitionsInConstructorSuccessTest() {
-        ConstructorPage constructorPage = open(BASE_URL, ConstructorPage.class);
+    @DisplayName("Конструктор. Переход к вкладке Соусы")
+    public void tabTransitionsToSaucesInConstructorSuccessTest() {
+        constructorPage = open(BASE_URL, ConstructorPage.class);
 
-        constructorPage.saucesTab.click();
-        constructorPage.sausesHeader.shouldBe(Condition.visible);
+        constructorPage.getSaucesTab().click();
+        constructorPage.getSausesHeader().shouldBe(Condition.visible);
+    }
 
-        constructorPage.fillingTab.click();
-        constructorPage.fillingHeader.shouldBe(Condition.visible);
+    @Test
+    @DisplayName("Конструктор. Переход к вкладке Начинки")
+    public void tabTransitionsToFillingInConstructorSuccessTest() {
+        constructorPage = open(BASE_URL, ConstructorPage.class);
 
-        constructorPage.burgersTab.click();
-        constructorPage.burgersHeader.shouldBe(Condition.visible);
+        constructorPage.getFillingTab().click();
+        constructorPage.getFillingHeader().shouldBe(Condition.visible);
+    }
+
+    @Test
+    @DisplayName("Конструктор. Переход к вкладке Булки")
+    public void tabTransitionsToBurgersInConstructorSuccessTest() {
+        constructorPage = open(BASE_URL, ConstructorPage.class);
+        constructorPage.getSaucesTab().click();
+        constructorPage.getSausesHeader().shouldBe(Condition.visible);
+
+        constructorPage.getBurgersTab().click();
+        constructorPage.getBurgersHeader().shouldBe(Condition.visible);
     }
 }

@@ -1,12 +1,15 @@
 package page.object;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
+import lombok.Data;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
 import static com.UserOperations.EMAIL_POSTFIX;
 
+@Data
 public class RegistrationPage {
 
     //локатор поля ввода Имя
@@ -27,18 +30,18 @@ public class RegistrationPage {
 
     //локатор предупреждения об ошибку Некорректный пароль
     @FindBy(how = How.XPATH, using = "//p[text()='Некорректный пароль']")
-    public SelenideElement incorrectPasswordWarning;
+    private SelenideElement incorrectPasswordWarning;
 
     //локатор линка Войти
     @FindBy(how = How.XPATH, using = "//a[text()='Войти']")
-    public SelenideElement loginLink;
+    private SelenideElement loginLink;
 
 
     public String nameValue;
     public String emailValue;
     public String passwordValue;
 
-    //Регистрация
+    @Step("Регистрация пользователя")
     public void registration() {
         emailValue = RandomStringUtils.randomAlphabetic(10) + EMAIL_POSTFIX;
         passwordValue = RandomStringUtils.randomAlphabetic(10);
@@ -50,7 +53,7 @@ public class RegistrationPage {
         registerButton.click();
     }
 
-    //Регистрация с невалидным паролем
+    @Step("Регистрация пользователя с невалидным паролем")
     public void registration(String passwordValue) {
         emailValue = RandomStringUtils.randomAlphabetic(10) + EMAIL_POSTFIX;
         nameValue = RandomStringUtils.randomAlphabetic(10);

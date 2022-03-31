@@ -21,23 +21,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class PersonalAccountTest {
 
     ConstructorPage constructorPage;
-    AuthorizationPage authorizationPage;
+    AuthorizationPage authorizationPage = page(AuthorizationPage.class);
     RegistrationPage registrationPage;
     PersonalAccountPage personalAccountPage = page(PersonalAccountPage.class);
     String token;
+    boolean logout;
 
     @Before
     @Step("Регистрация пользователя")
     public void registation() {
         constructorPage = open(BASE_URL, ConstructorPage.class);
-        constructorPage.personalAccountButton.click();
-
-        authorizationPage = page(AuthorizationPage.class);
-        authorizationPage.registerLink.click();
-
+        constructorPage.getPersonalAccountButton().click();
+        authorizationPage.getRegisterLink().click();
         registrationPage = page(RegistrationPage.class);
         registrationPage.registration();
-        authorizationPage.entranceHeader.shouldBe(Condition.visible);
+        authorizationPage.getEntranceHeader().shouldBe(Condition.visible);
         authorizationPage.authorization(registrationPage.emailValue, registrationPage.passwordValue);
     }
 
@@ -45,59 +43,57 @@ public class PersonalAccountTest {
     @Test
     @DisplayName("Переход в личный кабинет")
     public void transferToPersonalAccountSuccessTest() {
-        constructorPage.personalAccountButton.click();
+        logout = true;
+        constructorPage.getPersonalAccountButton().click();
 
-        personalAccountPage.profileButton.shouldBe(Condition.visible);
+        personalAccountPage.getProfileButton().shouldBe(Condition.visible);
         assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(personalAccountPage.url));
-
-        logout();
     }
 
     @Test
     @DisplayName("Переход из личного кабинета в конструктор по клику на «Конструктор»")
     public void switchingFromPersonalAccountToConstructorViaConstructorButtonSuccessTest() {
-        constructorPage.personalAccountButton.click();
-        personalAccountPage.constructorButton.click();
+        logout = true;
+        constructorPage.getPersonalAccountButton().click();
+        personalAccountPage.getConstructorButton().click();
 
-        constructorPage.assembleBurgerHeader.shouldBe(Condition.visible);
+        constructorPage.getAssembleBurgerHeader().shouldBe(Condition.visible);
         assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(constructorPage.url));
-
-        logout();
     }
 
     @Test
     @DisplayName("Переход из личного кабинета в конструктор по клику на логотип Stellar Burgers")
     public void switchingFromPersonalAccountToConstructorViaLogoSuccessTest() {
-        constructorPage.personalAccountButton.click();
-        personalAccountPage.stellarBurgersLogo.click();
+        logout = true;
+        constructorPage.getPersonalAccountButton().click();
+        personalAccountPage.getStellarBurgersLogo().click();
 
-        constructorPage.assembleBurgerHeader.shouldBe(Condition.visible);
+        constructorPage.getAssembleBurgerHeader().shouldBe(Condition.visible);
         assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(constructorPage.url));
-
-        logout();
     }
 
     @Test
     @DisplayName("Выход из аккаунта")
     public void logoutFromAccountSuccessTest() {
-        constructorPage.personalAccountButton.click();
-        personalAccountPage.logoutButton.click();
+        logout = false;
+        constructorPage.getPersonalAccountButton().click();
+        personalAccountPage.getLogoutButton().click();
 
-        authorizationPage.entranceHeader.shouldBe(Condition.visible);
+        authorizationPage.getEntranceHeader().shouldBe(Condition.visible);
         assertThat(WebDriverRunner.getWebDriver().getCurrentUrl(), equalTo(authorizationPage.url));
     }
 
 
-    @Step("Выход из системы")
-    public void logout() {
-        authorizationPage.constructorButton.click();
-        constructorPage.personalAccountButton.click();
-        personalAccountPage.logoutButton.click();
-        authorizationPage.constructorButton.click();
-    }
-
     @After
+    @Step("Выход из системы")
     public void down() {
+        if (logout) {
+            authorizationPage.getConstructorButton().click();
+            constructorPage.getPersonalAccountButton().click();
+            personalAccountPage.getLogoutButton().click();
+            authorizationPage.getConstructorButton().click();
+        }
+
         token = authorizationBack(registrationPage.emailValue, registrationPage.passwordValue);
         delete(token);
     }
